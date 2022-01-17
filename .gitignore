@@ -1,4 +1,4 @@
 node_modules/
-.env
+*.env
 
 https://ancient-spire-57579.herokuapp.com/
