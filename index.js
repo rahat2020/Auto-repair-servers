@@ -75,6 +75,9 @@ client.connect(err => {
       res.send(documents);
     })
   })
+
+  // product item ordered 
+  
   console.log('database connection established')
 });
 
