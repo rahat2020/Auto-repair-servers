@@ -3,7 +3,7 @@ const app = express()
 const cors = require('cors')
 require('dotenv').config()
 const { MongoClient } = require('mongodb');
-const ObjectID = require('mongodb').ObjectID;
+const ObjectId = require('mongodb').ObjectId;
 
 app.use((req, res, next) => {
   res.header({"Access-Control-Allow-Origin": "*"});
@@ -45,6 +45,13 @@ client.connect(err => {
       })
   })
 
+  // Showing service details for each selected service
+  app.get('/serviceDetails/:id', (req, res) => {
+    serviceCollection.find({ _id: ObjectId(req.params.id) })
+      .toArray((err, documents) => {
+        res.send(documents);
+      })
+  })
   // delete services 
   app.delete('/deleteServices/:id', (req, res)=>{
     const id = ObjectID(req.params.id);
@@ -76,7 +83,8 @@ client.connect(err => {
     })
   })
 
-  // product item ordered 
+
+  // 
   
   console.log('database connection established')
 });
