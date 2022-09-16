@@ -32,14 +32,45 @@ router.get('/get/:id', async (req, res, next) => {
         console.log(err);
     }
 })
-// UPDATE STATUS FEILD FROM DATABASE
-router.put('/update/:id', async (req, res, next) => {
+// UPDATE PRODUCT STATUS FEILD FROM DATABASE
+// router.put('/update/:id', verifyAdmin, async (req, res, next) => {
+//     try {
+    
+//         const data = await Order.updateOne(
+//             {
+//                 _id: req.params.id,
+//                 // 'PD.status': req.params.id
+//             },
+//             {
+//                 $set: { 'PD.$[Object].status': 'ongoing' }
+//             },
+//             {
+//                 "arrayFilters": [
+//                   { "Object._id": req.params.id },
+//                 ]
+//               }
+//             // { new: true }
+//         )
+//         res.status(200).json(data)
+//     } catch (err) {
+//         next(err);
+//         console.log(err);
+//     }
+// })
+
+// UPDATE SERVICE STATUS FEILD FROM DATABASE
+router.put('/update/:id', verifyAdmin, async (req, res, next) => {
     try {
-        const data = await Order.updateMany(req.params.id,
+    
+        const data = await Order.updateOne(
             {
-                $set: { status: req.body.status }
+                _id: req.params.id,
+                // 'PD.status': req.params.id
             },
-            {new: true}
+            {
+                $set: { 'status': req.body.status }
+            },
+            { new: true }
         )
         res.status(200).json(data)
     } catch (err) {
