@@ -2,7 +2,7 @@ const router = require('express').Router();
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
-const {verifyToken} = require('../utils/Verify')
+const { verifyToken } = require('../utils/Verify')
 
 // REGISTER A USER
 router.post('/register', async (req, res, next) => {
@@ -48,16 +48,24 @@ router.post('/login', async (req, res, next) => {
 })
 // UPDATE USER
 router.put('/update/:id', async (req, res, next) => {
-
-    try {
-        const user = await User.findByIdAndUpdate(req.params.id, {
-            $set: req.body
-        }, { new: true })
-        res.status(200).json(user)
-    } catch (err) {
-        next(err);
-        console.log(err)
+    if (req.body.userId === req.params.id) {
+        if (req.body.password) {
+            const salt = bcrypt.genSaltSync(10);
+            req.body.password = bcrypt.hashSync(req.body.password, salt);
+        }
+        try {
+            const user = await User.findByIdAndUpdate(req.params.id, {
+                $set: req.body
+            }, { new: true })
+            res.status(200).json(user)
+        } catch (err) {
+            next(err);
+            console.log(err)
+        }
+    } else {
+        res.status(401).json("You can update only your account!");
     }
+   
 })
 // GET ALL USER 
 router.get('/get', async (req, res, next) => {
@@ -94,7 +102,7 @@ router.delete('/delete/:id', async (req, res, next) => {
     }
 })
 
-router.get("/verifyToken",verifyToken, (req, res) => {
+router.get("/verifyToken", verifyToken, (req, res) => {
     res.send('token is valid')
 })
 module.exports = router;
